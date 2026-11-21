@@ -46,7 +46,12 @@
       "!**/personal-memory.json",
       "!**/*.log",
       "!src/renderer/dances/**/*",
-      "!src/renderer/vrma/**/*"
+      "!src/renderer/vrma/**/*",
+      "!**/*.bak",
+      "!**/*.bak.*",
+      "!**/*.backup",
+      "!**/*backup*/**",
+      "!**/account.enc*"
     ],
     "mac": {
       "category": "public.app-category.productivity",
