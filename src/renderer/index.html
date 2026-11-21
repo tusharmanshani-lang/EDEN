@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data: blob:; connect-src 'self' blob: data:;">
+  <title>EDEN</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="avatar-wardrobe.css">
+  <link rel="stylesheet" href="reactor-transformation.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">E</span> EDEN</div>
+      <div class="system-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="status">CORE INITIALIZING</span>
+      </div>
+      <button id="show-command" type="button" aria-controls="reactor-chat"
+        aria-expanded="true">Hide conversation</button>
+    </header>
+
+    <div class="command-board">
+     <section class="glass overview">
+  <h2>EDEN</h2>
+  <p class="overview-subtitle">Desktop Command Center</p>
+
+  <p class="greeting">Hey Tushar!</p>
+  <p class="overview-welcome">
+    Welcome to EDEN. What would you like to do today?
+  </p>
+
+  <div class="overview-details">
+    <div class="overview-row">
+      <span class="overview-icon overview-ready" aria-hidden="true">✓</span>
+      <div><strong>Ready</strong><small>Waiting for your command</small></div>
+    </div>
+    <div class="overview-row">
+      <span class="overview-icon overview-clock" aria-hidden="true">◷</span>
+      <div><strong>Nagpur</strong><time id="eden-clock"></time></div>
+    </div>
+  </div>
+</section>
+
+      <section class="module-stack module-left" aria-label="EDEN features">
+        <div class="glass module">
+          <span class="module-icon" aria-hidden="true">✧</span>
+          <div><strong>Gemini</strong><small>Conversation engine</small></div>
+        </div>
+        <div class="glass module">
+          <span class="module-icon" aria-hidden="true">▤</span>
+          <div><strong>Memory</strong><small>Saved preferences</small></div>
+        </div>
+        <div class="glass module">
+          <span class="module-icon" aria-hidden="true">∿</span>
+          <div><strong>Voice</strong><small>Tara playback</small></div>
+        </div>
+      </section>
+
+      <section class="eden-energy-scene" aria-label="EDEN energy core">
+        <div class="reactor-stage" aria-hidden="true">
+          <canvas id="reactor"></canvas>
+        </div>
+        <p id="core-error" hidden>Could not load eden-core.png.</p>
+      </section>
+
+      <section class="module-stack module-right" aria-label="Mac features">
+        <div class="glass module">
+          <span class="module-icon" aria-hidden="true">▣</span>
+          <div><strong>Screen Awareness</strong><small>Screen sharing</small></div>
+        </div>
+        <div class="glass module">
+          <span class="module-icon" aria-hidden="true">⌘</span>
+          <div><strong>Mac Control</strong><small>Apps and windows</small></div>
+        </div>
+        <div class="glass module">
+          <span class="module-icon" aria-hidden="true">≡</span>
+          <div><strong>Research</strong><small>Documents and reports</small></div>
+        </div>
+      </section>
+
+      <section class="glass chat-panel" id="reactor-chat">
+        <div class="chat-heading">
+          <h2>Conversation</h2>
+          <button id="hide-command" type="button">Close</button>
+        </div>
+        <canvas id="voice-wave" width="420" height="76" aria-hidden="true"></canvas>
+        <div id="messages" class="messages" role="log" aria-label="Conversation messages">
+        </div>
+      </section>
+
+      <section class="glass quick-actions" id="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+          <button type="button" data-command="Open Visual Studio Code">Open VS Code</button>
+          <button type="button" data-command="Open Spotify">Spotify</button>
+          <button type="button" data-command="Open Google">Search Web</button>
+        </div>
+      </section>
+
+      <form id="chat-form" class="chat-form">
+        <input id="message-input" type="text" placeholder="Message EDEN..."
+          aria-label="Message EDEN" autocomplete="off">
+        <button id="send-button" type="submit">Send</button>
+      </form>
+
+      <section class="glass activity-panel">
+        <h2>Activity</h2>
+        <p id="eden-activity" role="status">Ready</p>
+        <button id="toggle-centre" type="button" aria-controls="centre"
+          aria-expanded="false">Command Centre</button>
+      </section>
+    </div>
+
+    <details id="centre" class="command-centre" hidden>
+      <summary>Personal command centre</summary>
+      <p id="centre-mode"></p>
+      <form id="centre-add">
+        <select name="category" aria-label="Category">
+          <option>appointment</option><option>task</option><option>reminder</option>
+          <option>project</option><option>priority</option><option>inventory</option>
+          <option>inquiry</option><option>marketing</option><option>follow-up</option>
+          <option>email draft</option>
+        </select>
+        <input name="title" placeholder="Title" aria-label="Title" required maxlength="180">
+        <input name="date" type="datetime-local" aria-label="Due date or appointment time">
+        <textarea name="notes" placeholder="Details or draft" aria-label="Details or draft"></textarea>
+        <button>Add item</button>
+      </form>
+      <ul id="centre-entries"></ul>
+
+      <h2>Permissions</h2>
+      <form id="centre-settings">
+        <label><input name="local" type="checkbox"> Local mode</label>
+        <label><input name="read" type="checkbox"> Read files</label>
+        <label><input name="open" type="checkbox"> Open apps, files and websites</label>
+        <label><input name="edit" type="checkbox"> Write files</label>
+        <button>Save settings</button>
+      </form>
+
+      <h2>Action approvals</h2>
+      <form id="centre-propose">
+        <input name="target" placeholder="Full path to an existing text file" aria-label="File path" required>
+        <textarea name="after" placeholder="Replacement content" aria-label="Replacement content"></textarea>
+        <button>Propose edit</button>
+      </form>
+      <div id="centre-actions"></div>
+
+      <h2>Showroom sales</h2>
+      <form id="centre-analytics">
+        <input name="target" placeholder="Full path to sales JSON" aria-label="Sales file path" required>
+        <button>Analyse products</button>
+      </form>
+      <p>Use records with product, quantity and revenue fields.</p>
+      <pre id="centre-sales"></pre>
+
+      <h2>Health</h2>
+      <button id="centre-health">Check EDEN</button>
+      <button id="centre-gemini">Test Gemini</button>
+      <pre id="centre-health-result"></pre>
+
+      <h2>Activity</h2>
+      <button id="centre-refresh">Refresh</button>
+      <ul id="centre-history"></ul>
+      <p id="centre-feedback" role="status"></p>
+    </details>
+  </main>
+<script src="reactor.js"></script>
+<script src="avatar.bundle.js"></script>
+<script src="conversational-coder-ui.js"></script>
+  <script src="app.js"></script>
+src="command-centre.js"></script>
+</body>
+</html>

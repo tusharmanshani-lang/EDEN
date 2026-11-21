@@ -1,0 +1,67 @@
+{
+  "name": "eden-public",
+  "version": "0.2.0",
+  "private": true,
+  "description": "EDEN - Voice-first AI Mac operator",
+  "main": "src/main/index.js",
+  "scripts": {
+    "dev": "electron .",
+    "start": "electron .",
+    "pack": "electron-builder --mac dir --arm64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.28.2"
+  },
+  "dependencies": {
+    "@google/genai": "^2.32.0",
+    "@pixiv/three-vrm": "^3.5.5",
+    "@pixiv/three-vrm-animation": "^3.5.5",
+    "dotenv": "^18.0.10",
+    "mammoth": "1.13.0",
+    "pdf-parse": "2.4.5",
+    "three": "^0.187.0"
+  },
+  "productName": "EDEN Public",
+  "build": {
+    "appId": "local.eden.public",
+    "productName": "EDEN Public",
+    "asar": false,
+    "directories": {
+      "output": "release-public",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*backup*",
+      "!**/*.map",
+      "!**/.DS_Store",
+      "!**/.env",
+      "!**/.env.*",
+      "!**/account.enc",
+      "!**/account.enc.*",
+      "!**/conversation.json",
+      "!**/personal-memory.json",
+      "!**/*.log",
+      "!src/renderer/dances/**/*",
+      "!src/renderer/vrma/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "extendInfo": {
+        "NSAudioCaptureUsageDescription": "This app needs access to audio capture",
+        "NSBluetoothAlwaysUsageDescription": "This app needs access to Bluetooth",
+        "NSBluetoothPeripheralUsageDescription": "This app needs access to Bluetooth",
+        "NSCameraUsageDescription": "This app needs access to the camera",
+        "NSMicrophoneUsageDescription": "EDEN NEXT uses the microphone to listen for your wake phrase and commands.",
+        "NSSpeechRecognitionUsageDescription": "EDEN NEXT uses on-device speech recognition to understand voice commands.",
+        "NSAppleEventsUsageDescription": "EDEN controls Mac apps when you request an action."
+      },
+      "icon": "build/eden.icns"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'self'; style-src 'self'"
+  >
+  <link rel="stylesheet" href="island.css">
+  <title>EDEN Island</title>
+</head>
+<body>
+  <main class="island" data-mode="idle" aria-label="EDEN activity">
+    <button
+      class="logo"
+      id="open"
+      aria-label="Open EDEN"
+      title="Open EDEN"
+    >
+      <svg class="halo" viewBox="0 0 56 56" aria-hidden="true">
+        <circle class="ring outer" cx="28" cy="28" r="25"/>
+        <circle class="ring middle" cx="28" cy="28" r="21"/>
+        <circle class="ring inner" cx="28" cy="28" r="17"/>
+      </svg>
+
+      <svg class="emblem" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M23 7H10V25H23M10 16H21"/>
+        <path class="spark" d="M25 12V20"/>
+      </svg>
+    </button>
+
+    <div class="copy">
+      <strong id="title">Ready</strong>
+      <span id="detail" role="status">EDEN is here</span>
+    </div>
+
+    <div class="wave" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <button
+      class="stop"
+      id="stop"
+      title="Stop EDEN"
+      aria-label="Stop EDEN"
+    >■</button>
+  </main>
+
+  <script src="island-ui.js"></script>
+</body>
+</html>

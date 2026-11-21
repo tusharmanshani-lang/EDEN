@@ -1,0 +1,31 @@
+/* No stage/background overrides for the original outfit: use EDEN's normal theme. */
+
+/* This palette is active only while the reactor outfit is actually visible. */
+body.eden-reactor-theme:has(#eden-avatar:not([hidden])),
+body.eden-reactor-theme:has(#eden-avatar:not([hidden])) .app {
+  background:
+    radial-gradient(ellipse at 50% 65%, rgba(12, 35, 61, .70), transparent 65%),
+    radial-gradient(ellipse at 8% 8%, rgba(14, 33, 58, .36), transparent 50%),
+    linear-gradient(145deg, #03060b 0%, #060d19 55%, #02050a 100%) !important;
+}
+
+body.eden-reactor-theme:has(#eden-avatar:not([hidden])) .glass {
+  background:
+    linear-gradient(140deg, rgba(18, 32, 51, .70), rgba(5, 12, 23, .68)) !important;
+  border-color: rgba(137, 185, 222, .21) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(211, 235, 255, .12),
+    0 20px 55px rgba(0, 0, 0, .38) !important;
+}
+
+/* Remove the grey rectangle: the avatar shares the surrounding navy backdrop. */
+body.eden-reactor-theme:has(#eden-avatar:not([hidden]))
+.reactor-stage[data-avatar-lit] {
+  background: transparent !important;
+}
+
+body.eden-reactor-theme:has(#eden-avatar:not([hidden]))
+.reactor-stage.eden-dance-stage[data-avatar-lit] {
+  background:
+    radial-gradient(ellipse at 50% 75%, #0c1b2e 0%, #050b15 48%, #02050a 100%) !important;
+}

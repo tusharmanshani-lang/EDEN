@@ -1,0 +1,6 @@
+.reactor-stage > .eden-reactor-transformation {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 15; pointer-events: none;
+}
+.eden-reactor-transformation[hidden] { display: none !important; }
+.reactor-stage.eden-reactor-minimal #eden-avatar { animation: eden-nanotech-soft-fade .18s ease; }
+@keyframes eden-nanotech-soft-fade { from { opacity: .75; } to { opacity: 1; } }

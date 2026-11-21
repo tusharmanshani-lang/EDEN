@@ -1,0 +1,4 @@
+# Verify tokenization for the selected KWS model before using.
+# Phrase weights and trailing silence are model/API dependent.
+HEY EDEN :1.0
+HI EDEN :1.0

@@ -1,0 +1,43 @@
+node_modules/
+.env
+.DS_Store
+logs/
+data/
+dist/
+release/
+
+# EDEN public release private/local files
+node_modules/
+release/
+release-public/
+.env
+.env.*
+!.env.example
+account.enc*
+**/*backup*/
+*.log
+.DS_Store
+memory/
+memories/
+reports/
+conversation.json
+personal-memory.json
+
+# Public repository exclusions
+*.bak
+*.bak.*
+*.backup
+**/*backup*/
+.vscode/
+/src\ /
+.env
+.env.*
+!.env.example
+account.enc*
+node_modules/
+release/
+release-public/
+*.log
+.DS_Store
+/src/renderer/dances/
+/src/renderer/vrma/

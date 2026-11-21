@@ -1,0 +1,363 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  color: #edf5ff;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.island {
+  --light: #b8ddff;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  overflow: hidden;
+  border-radius: 30px;
+
+  border: 1px solid rgba(221, 238, 255, .19);
+  border-top-color: rgba(248, 252, 255, .48);
+  border-bottom-color: rgba(211, 232, 255, .25);
+
+  background:
+    radial-gradient(
+      ellipse at 14% 0%,
+      rgba(239, 248, 255, .18),
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse at 95% 100%,
+      rgba(171, 208, 245, .10),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(169, 193, 220, .065),
+      rgba(7, 12, 19, .20) 55%,
+      rgba(101, 132, 165, .065)
+    );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .21),
+    inset 0 -1px 1px rgba(211, 234, 255, .10),
+    inset 1px 0 1px rgba(240, 249, 255, .08);
+}
+
+button {
+  appearance: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.logo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(135, 188, 238, .12),
+    transparent 68%
+  );
+}
+
+.emblem {
+  width: 29px;
+  height: 29px;
+  fill: none;
+  stroke: #e3f3ff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(159, 215, 255, .4));
+}
+
+.spark {
+  opacity: .5;
+}
+
+.halo {
+  position: absolute;
+  inset: 0;
+  width: 50px;
+  height: 50px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--light);
+  stroke-width: .8;
+  opacity: .12;
+  transform-origin: 28px 28px;
+}
+
+.outer {
+  stroke-dasharray: 32 10 8 16;
+}
+
+.middle {
+  stroke-dasharray: 24 7 10 8;
+}
+
+.inner {
+  stroke-dasharray: 18 5;
+}
+
+.copy {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.copy strong,
+.copy span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copy strong {
+  font-size: 12px;
+  font-weight: 550;
+  letter-spacing: .015em;
+}
+
+.copy span {
+  font-size: 10px;
+  color: #bdccdc;
+}
+
+.wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  padding: 0 2px;
+}
+
+.wave i {
+  width: 2px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--light);
+  opacity: .65;
+}
+
+.stop {
+  width: 23px;
+  height: 23px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(231, 243, 255, .22);
+  background: rgba(206, 228, 251, .08);
+  font-size: 8px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+
+.stop:hover {
+  background: rgba(221, 239, 255, .20);
+}
+
+.logo:hover .emblem {
+  stroke: white;
+}
+
+/* Fingerprint-like light flowing around the EDEN mark. */
+[data-mode="speaking"] {
+  --light: #b9dcff;
+}
+
+[data-mode="speaking"] .outer {
+  animation: orbit 5s linear infinite;
+  opacity: .75;
+}
+
+[data-mode="speaking"] .middle {
+  animation: orbit 3.5s linear infinite reverse;
+  opacity: .55;
+}
+
+[data-mode="speaking"] .inner {
+  animation: breathe 1.1s ease-in-out infinite alternate;
+}
+
+[data-mode="speaking"] .halo {
+  filter: drop-shadow(0 0 4px rgba(151, 207, 255, .45));
+}
+
+[data-mode="speaking"] .wave i,
+[data-mode="music"] .wave i {
+  animation: voice .65s ease-in-out infinite alternate;
+}
+
+.wave i:nth-child(2) { animation-delay: -.25s; }
+.wave i:nth-child(3) { animation-delay: -.5s; }
+.wave i:nth-child(4) { animation-delay: -.15s; }
+.wave i:nth-child(5) { animation-delay: -.4s; }
+
+[data-mode="thinking"] .outer {
+  opacity: .6;
+  animation: orbit 2.8s linear infinite;
+}
+
+[data-mode="thinking"] .middle {
+  opacity: .3;
+  animation: breathe 1.2s ease-in-out infinite alternate;
+}
+
+[data-mode="listening"] {
+  --light: #b8f2e6;
+}
+
+[data-mode="listening"] .ring {
+  animation: breathe .9s ease-in-out infinite alternate;
+}
+
+[data-mode="listening"] .wave i {
+  height: 9px;
+}
+
+[data-mode="music"] .ring {
+  opacity: .28;
+}
+
+[data-mode="music"] .stop {
+  display: none;
+}
+
+@keyframes orbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes breathe {
+  from { opacity: .18; }
+  to { opacity: .85; }
+}
+
+@keyframes voice {
+  to {
+    transform: scaleY(3);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+  }
+
+  [data-mode="speaking"] .ring,
+  [data-mode="thinking"] .ring {
+    opacity: .6;
+  }
+}
+
+/* EDEN compact clear capsule */
+html,
+body {
+  background: transparent !important;
+}
+
+.island {
+  height: calc(100% - 4px);
+  margin: 2px 3px;
+  padding: 3px 9px 3px 4px;
+  gap: 6px;
+
+  border-radius: 999px !important;
+  overflow: hidden;
+  clip-path: inset(0 round 999px);
+
+  border: 1px solid rgba(235, 247, 255, .24);
+  border-top-color: rgba(255, 255, 255, .55);
+  border-bottom-color: rgba(222, 240, 255, .30);
+
+  background:
+    radial-gradient(
+      ellipse at 25% 0%,
+      rgba(255, 255, 255, .15),
+      transparent 65%
+    ),
+    linear-gradient(
+      165deg,
+      rgba(215, 235, 255, .055),
+      rgba(8, 15, 24, .10) 60%,
+      rgba(194, 222, 250, .045)
+    );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, .22),
+    inset 0 -1px 1px rgba(221, 239, 255, .10);
+
+  -webkit-backdrop-filter: blur(9px) saturate(120%);
+  backdrop-filter: blur(9px) saturate(120%);
+}
+
+.logo,
+.halo {
+  width: 40px;
+  height: 40px;
+}
+
+.logo {
+  background: transparent;
+}
+
+.emblem {
+  width: 23px;
+  height: 23px;
+}
+
+.copy {
+  gap: 3px;
+}
+
+.copy strong {
+  font-size: 11px;
+}
+
+.copy span {
+  font-size: 9px;
+  color: #d1dce9;
+}
+
+.copy strong,
+.copy span {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .8);
+}
+
+.wave {
+  gap: 2px;
+  padding: 0;
+}
+
+.wave i {
+  width: 2px;
+  height: 4px;
+}
+
+.stop {
+  width: 20px;
+  height: 20px;
+  font-size: 7px;
+}

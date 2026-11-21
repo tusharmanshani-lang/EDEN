@@ -1,0 +1,22 @@
+.eden-coder-toggle, .eden-coder-panel button {
+  color: #eaf4ff; background: #123256; border: 1px solid #37658b;
+  border-radius: 8px; padding: 9px 12px; cursor: pointer;
+}
+.eden-coder-panel[hidden] { display: none !important; }
+.eden-coder-panel {
+  position: fixed; inset: 5vh 5vw; z-index: 20000; overflow: auto;
+  padding: 24px; border: 1px solid #4b8cbc; border-radius: 18px;
+  background: #071424; color: #eaf4ff; box-shadow: 0 20px 90px #000b;
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.eden-coder-panel header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.eden-coder-panel textarea {
+  display: block; width: 100%; min-height: 110px; resize: vertical;
+  margin: 8px 0; padding: 12px; border: 1px solid #37658b;
+  border-radius: 9px; color: #eff7ff; background: #10253e; font: inherit;
+}
+.eden-coder-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.eden-coder-panel button:disabled { opacity: .45; cursor: default; }
+.eden-coder-panel pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #040c16; padding: 14px; border-radius: 8px; }
+.eden-coder-panel [data-log] { max-height: 35vh; overflow: auto; }
+.eden-coder-panel [data-project] { overflow-wrap: anywhere; color: #a6c9e8; }
