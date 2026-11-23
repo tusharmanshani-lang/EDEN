@@ -1,6 +1,6 @@
 {
   "name": "eden-public",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "EDEN - Voice-first desktop companion (Windows preview and macOS)",
   "main": "src/main/index.js",
@@ -10,7 +10,7 @@
     "pack": "electron-builder --mac dir --arm64 --publish never",
     "pack:win": "electron-builder --win nsis --x64 --publish never",
     "pack:win:dir": "electron-builder --win dir --x64 --publish never",
-    "check:windows": "node scripts/check-source.cjs && node tests/windows-check.cjs && node tests/voice-lifecycle.cjs && node tests/files-windows.cjs",
+    "check:windows": "node scripts/check-source.cjs && node tests/windows-check.cjs && node tests/voice-lifecycle.cjs && node tests/files-windows.cjs && node tests/windows-repair.cjs",
     "build:renderer": "esbuild src/renderer/avatar.js --bundle --format=iife --outfile=src/renderer/avatar.bundle.js && esbuild src/renderer/energy-core-3d.js --bundle --format=iife --outfile=src/renderer/energy-core-3d.bundle.js"
   },
   "devDependencies": {

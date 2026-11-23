@@ -41,6 +41,8 @@ for (const key of ['GEMINI_API_KEY', 'GEMINI_MODEL', 'GEMINI_FALLBACK_MODEL']) d
 
 let mainWindow = null;
 let mainWindowCreated = false;
+let brainInitializing = false;
+let windowsAudioInput = null;
 let edenIsland = null;
 let brain = null;
 let chatQueue = Promise.resolve();
@@ -52,6 +54,7 @@ let activeRequest = null;
 let stopBackground = () => {};
 
 function interruptEverything() {
+  windowsAudioInput?.cancel();
   edenIsland?.stopped();
   requestGeneration++;
   activeRequest?.abort(interruption.abortError());
@@ -151,7 +154,7 @@ const wakeWordService = new LocalWakeWordService({
           return Boolean(activeSpeech);
         }
       })
-    : process.platform === 'win32' ? () => require('./windows/voice').speechAdapter({
+    : process.platform === 'win32' && process.env.EDEN_LEGACY_WINDOWS_VOICE === '1' ? () => require('./windows/voice').speechAdapter({
         interceptTranscript(text) {
           if (interruption.isStopCommand(text) && (activeSpeech || activeRequest)) { interruptEverything(); return true; }
           return Boolean(activeSpeech);
@@ -203,7 +206,7 @@ function sayWithTara(text, signal) {
 
     const child = execFile(
       process.platform === 'win32' ? require('./windows/voice').powershell() : '/usr/bin/say',
-      process.platform === 'win32' ? ['-NoProfile', '-NonInteractive', '-File', path.join(__dirname, 'windows/speak.ps1')] : ['-v', 'Tara', '-f', '-'],
+      process.platform === 'win32' ? require('./windows/speech-output').args : ['-v', 'Tara', '-f', '-'],
       { timeout: 60_000, signal },
       (error, _stdout, stderr) => {
         if (error) {
@@ -311,6 +314,20 @@ console.log('EDEN Tara: starting playback');
 
 
 function registerHandlers() {
+  if (process.platform === 'win32') {
+    windowsAudioInput = require('./windows/audio-input').createAudioInput({
+      getBrain: () => brainInitializing ? null : brain,
+      isLocal: async () => (await centre.load()).local
+    });
+    const trustedVoiceRequest = event => {
+      if (!mainWindow || mainWindow.isDestroyed() || event.sender !== mainWindow.webContents || event.senderFrame !== mainWindow.webContents.mainFrame) throw new Error('Unknown voice requester.');
+    };
+    ipcMain.handle('eden:transcribe-voice', async (event, input) => {
+      trustedVoiceRequest(event);
+      return windowsAudioInput.transcribe(input);
+    });
+    ipcMain.handle('eden:cancel-voice-input', event => { trustedVoiceRequest(event); windowsAudioInput.cancel(); return true; });
+  }
     ipcMain.handle('eden:startup-greeting', async (_event, recent) => {
     if (!brain || await brain.localMode()) return null;
 
@@ -553,6 +570,7 @@ function registerHandlers() {
     userName: publicProfile?.name || '',
     version: app.getVersion(),
     platform: process.platform,
+    initializing: brainInitializing,
     ai: brain?.getStatus() ?? {
       ready: false,
       model: process.env.GEMINI_MODEL || 'gemini-3.8-flash'
@@ -570,6 +588,7 @@ function registerHandlers() {
       throw new Error('Please enter a message.');
     }
     const input = message.trim();
+    if (brainInitializing && !interruption.isStopCommand(input)) return { reply: 'My conversation engine is starting. Please try again in a moment.', model: 'EDEN-LOCAL', spoken: false };
 
     if (interruption.isStopCommand(input)) {
       interruptEverything();
@@ -883,7 +902,12 @@ function createWindow({ hidden = false } = {}) {
       mainWindow.hide();
     }
   });
-  mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../renderer/index.html')).catch(() => {
+    require('electron').dialog.showErrorBox('EDEN window could not load', 'The interface files could not be loaded. Reinstall the latest preview; your saved account and memories are not removed.');
+  });
+  mainWindow.webContents.on('render-process-gone', () => {
+    require('electron').dialog.showErrorBox('EDEN interface stopped', 'The interface process stopped. Quit EDEN completely and reopen it. If this repeats, send the build version and Windows version to the maintainer.');
+  });
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -895,6 +919,7 @@ function showEden() {
     return;
   }
 
+  if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.show();
   mainWindow.focus();
 }
@@ -904,6 +929,10 @@ if (!app.requestSingleInstanceLock()) {
 } else {
   app.on('second-instance', () => {
     if (mainWindow) showEden();
+    else {
+      const setup = BrowserWindow.getAllWindows().find(win => !win.isDestroyed());
+      if (setup) { if (setup.isMinimized()) setup.restore(); setup.show(); setup.focus(); }
+    }
   });
 
   app.whenReady().then(async () => {
@@ -923,8 +952,8 @@ if (!app.requestSingleInstanceLock()) {
       ]));
     }
     registerHandlers();
-    await initializeBrain();
-    createWindow({ hidden: process.argv.includes('--eden-background') });
+    brainInitializing = true;
+    createWindow({ hidden: process.platform === 'darwin' && process.argv.includes('--eden-background') });
 
     edenIsland = createDynamicIsland({
       getMainWindow: () => mainWindow,
@@ -935,8 +964,15 @@ if (!app.requestSingleInstanceLock()) {
       }
     });
 
+    void initializeBrain().finally(() => {
+      brainInitializing = false;
+      if (mainWindow && !mainWindow.isDestroyed()) mainWindow.webContents.send('eden:brain-ready', { ready: Boolean(brain) });
+    });
     wakeWordService.on('wake', () => edenIsland?.listen());
     app.on('activate', showEden);
+  }).catch(() => {
+    require('electron').dialog.showErrorBox('EDEN startup failed', 'Startup could not finish. Quit EDEN completely and reinstall the latest preview. Saved settings have not been deleted.');
+    app.quit();
   });
 }
 

@@ -5,6 +5,14 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('eden', {
   // Account secrets are intentionally never exposed through this bridge.
+  platform: process.platform,
+  transcribeVoice: input => ipcRenderer.invoke('eden:transcribe-voice', input),
+  cancelVoiceInput: () => ipcRenderer.invoke('eden:cancel-voice-input'),
+  onBrainReady(callback) {
+    const listener = (_event, state) => callback(state);
+    ipcRenderer.on('eden:brain-ready', listener);
+    return () => ipcRenderer.removeListener('eden:brain-ready', listener);
+  },
     startupGreeting: recent =>
     ipcRenderer.invoke('eden:startup-greeting', recent),
   generateMotion: description => ipcRenderer.invoke('eden:generate-motion', description),

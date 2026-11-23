@@ -1396,6 +1396,10 @@ window.addEventListener('beforeunload', () => {
   wakeWordUnsubscribers = [];
 });
 
+window.eden.onBrainReady?.(state => {
+  updateStatus(state.ready ? 'CORE ONLINE' : 'CONVERSATION ENGINE UNAVAILABLE');
+});
+
 void initializeEDEN().then(async ready => {
   if (!ready) return;
 
@@ -1408,6 +1412,10 @@ void initializeEDEN().then(async ready => {
     sendButton.disabled = false;
   }
 
+  if (window.eden.platform === 'win32') {
+    updateStatus('READY · RECORD VOICE OR TYPE');
+    return;
+  }
   try {
     const voice = await window.eden.wakeWord?.start();
     if (voice?.lastError) updateStatus(voice.lastError);

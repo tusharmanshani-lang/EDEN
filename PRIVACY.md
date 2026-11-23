@@ -39,3 +39,7 @@ The reviewed public source does not include a dedicated maintainer-run analytics
 Local history and memories persist until removed. To reset the public app completely, quit it and back up any data you need, then remove its `eden-public` application-data folder. Separately remove exported reports, chosen workspaces and files elsewhere if desired. Uninstalling the app may leave this data behind. Removing local files does not delete copies already held by external providers. Revoke an API key through Google AI Studio if necessary.
 
 You can decline setup, avoid cloud features, quit the app, revoke operating-system permissions or uninstall it. This project has no verified compliance certification; policy changes should be reviewed alongside the corresponding release.
+
+
+## Windows repair: optional recorded voice input
+The repaired Windows preview does not start the legacy System.Speech listener automatically. Record voice asks for consent, captures up to 15 seconds through the operating-system default microphone, and sends the audio clip to Google Gemini for transcription. Google quotas and terms apply. Clips are held in app memory rather than intentionally saved as audio files by EDEN. Cancellation stops recording or aborts a pending request but cannot retract bytes already received by Google. Transcripts are placed in the composer for review and are not automatically executed. Sending a transcript then uses normal conversation/history handling. Windows+H is an optional separate Microsoft voice-typing service with its own privacy settings.
