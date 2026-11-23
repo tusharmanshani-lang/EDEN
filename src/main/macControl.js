@@ -140,6 +140,8 @@ function extractDocumentText(filePath, extension, timeoutMs) {
 }
 
 function convertRtfFileToText(filePath, timeoutMs = 15000) {
+  if (process.platform === 'win32') return Promise.reject(new Error('RTF conversion is not supported in the Windows preview. Save the document as TXT or DOCX.'));
+
   return new Promise((resolve, reject) => {
     const child = spawn(
       '/usr/bin/textutil',

@@ -176,6 +176,7 @@ function createLiveScreen({ settingsPath, isLocal, onStatus }) {
   }
 
   async function start() {
+    if (process.platform === 'win32') return 'Live screen viewing is not implemented in this Windows preview. No screen capture has started.';
     if (active) return 'Live viewing is already enabled for this session.';
     if (await isLocal()) return 'Live viewing is unavailable in local mode.';
     if (!existsSync(helper)) return 'Compile the EDEN screen helper first.';

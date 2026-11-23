@@ -27,7 +27,7 @@ const interruption = require('../core/interruption');
 const EdenBrain = require('../core/edenBrain');
 const { createScheduler } = require('./scheduler');
 const { createDynamicIsland } = require('./dynamicIsland');
-const MacControl = require('./macControl');
+const MacControl = process.platform === 'win32' ? require('./windows/control') : require('./macControl');
 const CommandCentre = require('./commandCentre');
 const LocalWakeWordService = require('./localWakeWordService');
 const { nativeSpeechAdapter } = require('./nativeSpeechAdapter');
@@ -40,6 +40,7 @@ const { createProjectTools } = require('./projectTools');
 for (const key of ['GEMINI_API_KEY', 'GEMINI_MODEL', 'GEMINI_FALLBACK_MODEL']) delete process.env[key];
 
 let mainWindow = null;
+let mainWindowCreated = false;
 let edenIsland = null;
 let brain = null;
 let chatQueue = Promise.resolve();
@@ -150,7 +151,12 @@ const wakeWordService = new LocalWakeWordService({
           return Boolean(activeSpeech);
         }
       })
-    : null
+    : process.platform === 'win32' ? () => require('./windows/voice').speechAdapter({
+        interceptTranscript(text) {
+          if (interruption.isStopCommand(text) && (activeSpeech || activeRequest)) { interruptEverything(); return true; }
+          return Boolean(activeSpeech);
+        }
+      }) : null
 });
 
 async function initializeBrain() {
@@ -196,8 +202,8 @@ function sayWithTara(text, signal) {
     let inputError;
 
     const child = execFile(
-      '/usr/bin/say',
-      ['-v', 'Tara', '-f', '-'],
+      process.platform === 'win32' ? require('./windows/voice').powershell() : '/usr/bin/say',
+      process.platform === 'win32' ? ['-NoProfile', '-NonInteractive', '-File', path.join(__dirname, 'windows/speak.ps1')] : ['-v', 'Tara', '-f', '-'],
       { timeout: 60_000, signal },
       (error, _stdout, stderr) => {
         if (error) {
@@ -415,6 +421,7 @@ function registerHandlers() {
     },
     openURL: url => shell.openExternal(url),
     openTerminal: async (binary, args, cwd) => {
+      if (process.platform === 'win32') throw new Error('Interactive developer terminal launch is not supported in this Windows preview.');
       const { promisify } = require('node:util');
       const quote = value => "'" + String(value).replace(/'/g, "'\\''") + "'";
       const command = 'cd ' + quote(cwd) + ' && ' + [binary, ...args].map(quote).join(' ');
@@ -846,6 +853,7 @@ function registerHandlers() {
 }
 
 function createWindow({ hidden = false } = {}) {
+  mainWindowCreated = true;
   mainWindow = new BrowserWindow({
         show: !hidden,
     width: 1250,
@@ -940,5 +948,5 @@ app.on('before-quit', () => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+  if (process.platform !== 'darwin' && mainWindowCreated) app.quit();
 });

@@ -16,10 +16,10 @@ function validate(input) {
 }
 
 async function ensurePublicSetup(app) {
-  if (process.platform !== 'darwin') throw new Error('This release setup supports macOS only.');
+  if (!['darwin', 'win32'].includes(process.platform)) throw new Error('This preview supports Windows and macOS.');
   const file = path.join(app.getPath('userData'), 'account.enc');
   async function encrypt(value) {
-    if (!safeStorage.isEncryptionAvailable()) throw new Error('macOS secure storage is unavailable. Unlock your Keychain and try again.');
+    if (!safeStorage.isEncryptionAvailable()) throw new Error('System secure storage is unavailable. Sign in to your operating system and try again.');
     return safeStorage.encryptString(JSON.stringify(value));
   }
   function activate(account) {
@@ -53,7 +53,7 @@ async function ensurePublicSetup(app) {
       try {
         const account = validate(input);
         // Fail before any network call if secure local storage is unavailable.
-        if (!safeStorage.isEncryptionAvailable()) throw new Error('macOS secure storage is unavailable. Unlock your Keychain and try again.');
+        if (!safeStorage.isEncryptionAvailable()) throw new Error('System secure storage is unavailable. Sign in to your operating system and try again.');
         const ai = new GoogleGenAI({ apiKey: account.key, httpOptions: { timeout: 15000 } });
         account.model = await selectModel(ai, { manual: account.model, isCancelled: () => win.isDestroyed() });
         const encrypted = await encrypt(account);

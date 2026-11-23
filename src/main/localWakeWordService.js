@@ -53,6 +53,12 @@ class LocalWakeWordService extends EventEmitter {
       });
 
       await this.adapter.start({
+        onError: error => {
+          if (!isCurrent()) return;
+          this.state = 'error';
+          this.lastError = error?.message || String(error);
+          this.emit('state', this.getStatus());
+        },
         onKeyword: (keyword) => {
           const normalized = String(keyword || '').trim().toUpperCase();
           if (!this.keywords.includes(normalized)) return;

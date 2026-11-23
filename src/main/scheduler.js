@@ -436,6 +436,10 @@ for (const model of [...schedulingModels, ...schedulingModels]) {
   }
 
   async function handle(input) {
+    if (process.platform === 'win32') {
+      if (candidate(input) || /\b(shut\s*down|power off|quit all|close all|restart|reboot|sleep|lock (?:my |the )?(?:computer|screen))\b/i.test(input)) return { reply: 'Calendar, reminders and system power commands are not implemented in this Windows preview.', model: 'EDEN-WINDOWS' };
+      return null;
+    }
         const systemResult = await handleSystemAction(input);
 
     if (systemResult) {
