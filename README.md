@@ -86,8 +86,20 @@ Bundled VRM model sources and redistribution permissions have not yet been verif
 
 Songs, imported dances, and preset animation assets are excluded from Git and public builds.
 
-No project-wide open-source license has been selected yet. Third-party dependencies retain their respective licenses.
+Project-authored code and documentation use the MIT License. Third-party dependencies retain their respective licenses; see LICENSING.md for asset limitations.
 
 ## Limitations
 
 This is an experimental Mac operator. Verify important action results. Native helpers, voice availability, coding tools, and screen features require further testing on other Macs.
+
+## License
+
+Project-authored software and documentation are licensed under the [MIT License](LICENSE). See [Licensing scope and asset audit](LICENSING.md) for third-party components and non-code assets. Bundled assets are not automatically covered by the software license.
+
+## Privacy policy
+
+See [EDEN privacy policy](PRIVACY.md) before connecting an AI account or enabling voice, screen or project features.
+
+## Code signing policy
+
+See [Code signing policy](CODE_SIGNING.md). SignPath approval/signing is not yet confirmed. Current Windows downloads are unsigned experimental previews; the existing Mac download is ad-hoc signed and not notarized. Windows voice recognition and startup have unresolved tester reports. Build success does not establish runtime reliability.
