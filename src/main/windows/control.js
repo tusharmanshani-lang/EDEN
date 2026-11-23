@@ -9,6 +9,13 @@ class WindowsControl extends Base {
   this.allowedRoots = ['desktop','documents','downloads','pictures','videos','music'].map(key => app.getPath(key)).concat(this.appPath);
   this.allowedApps = Object.fromEntries(['calculator','notepad','notes','terminal','chrome','googlechrome','edge','microsoftedge','firefox','spotify','vscode','visualstudiocode','taskmanager','finder','explorer','fileexplorer','settings','systemsettings'].map(name => [name, name]));
   this.reportsDirectory = require('node:path').join(app.getPath('documents'), 'EDEN Reports');
+  // Keep both Windows path aliases and their canonical filesystem paths.
+  const fs = require('node:fs');
+  const canonicalRoots = this.allowedRoots.map(root => {
+    try { return fs.realpathSync.native(root); }
+    catch { return root; }
+  });
+  this.allowedRoots = [...new Set([...this.allowedRoots, ...canonicalRoots])];
  }
  requireMac() {}
  getStatus() { return { available:true, platform:'win32', supportedActions:['open-app','open-website','list-folders','search-files','open-file','read-text-file','search-document-contents','save-research-report','list-research-reports','get-approved-locations','preview-file'], destructiveActionsEnabled:false, unrestrictedTerminalEnabled:false }; }
