@@ -1,5 +1,7 @@
 name: Build Windows preview
 on:
+  push:
+    branches: [windows-preview]
   workflow_dispatch:
 permissions:
   contents: read
